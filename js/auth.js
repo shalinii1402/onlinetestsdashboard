@@ -6,26 +6,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if we are on a protected page
     const path = window.location.pathname;
     const isLoginPage = path.includes('login.html');
-    const isRolePage = path.includes('role_selection.html');
+    // Root path (index.html) is now the Role Selection page
+    const isRolePage = path.endsWith('/') || path.includes('index.html');
     const userRole = localStorage.getItem('userRole');
 
     if (!isLoginPage && !isRolePage) {
         if (!userRole) {
-            // Not logged in, redirect to role selection
-            window.location.href = 'role_selection.html';
+            // Not logged in, redirect to home (role selection)
+            window.location.href = 'index.html';
         } else {
             // Logged in, check role permission
             if (path.includes('admin') && userRole !== 'admin') {
                 alert('Access Denied: Admins only.');
-                window.location.href = 'index.html';
+                window.location.href = 'student_dashboard.html';
             }
         }
+    } else if (isRolePage) {
+        // We are on Role/Home page.
+        // Optional: If already logged in, you might want to redirect to dashboard.
+        // But for "Select Role" experience, we might let them choose again OR redirect.
+        // Let's redirect recognized users for convenience:
+        if (userRole === 'student') window.location.href = 'student_dashboard.html';
+        if (userRole === 'admin') window.location.href = 'admin_dashboard.html';
     } else {
-        // We are on login or role page, redirect if already logged in
-        if (userRole) {
-            if (userRole === 'student') window.location.href = 'index.html';
-            if (userRole === 'admin') window.location.href = 'admin_dashboard.html';
-        }
+        // We are on Login page
+        if (userRole === 'student') window.location.href = 'student_dashboard.html';
+        if (userRole === 'admin') window.location.href = 'admin_dashboard.html';
     }
 
     // Handle Login Submit
@@ -44,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (role === 'admin') {
                 window.location.href = 'admin_dashboard.html';
             } else {
-                window.location.href = 'index.html';
+                window.location.href = 'student_dashboard.html';
             }
         });
     }
@@ -57,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('userRole');
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userName');
-            window.location.href = 'role_selection.html';
+            window.location.href = 'index.html';
         });
     });
 });
