@@ -6,12 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if we are on a protected page
     const path = window.location.pathname;
     const isLoginPage = path.includes('login.html');
+    const isRolePage = path.includes('role_selection.html');
     const userRole = localStorage.getItem('userRole');
 
-    if (!isLoginPage) {
+    if (!isLoginPage && !isRolePage) {
         if (!userRole) {
-            // Not logged in, redirect to login
-            window.location.href = 'login.html';
+            // Not logged in, redirect to role selection
+            window.location.href = 'role_selection.html';
         } else {
             // Logged in, check role permission
             if (path.includes('admin') && userRole !== 'admin') {
@@ -20,9 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     } else {
-        // We are on login page, redirect if already logged in
-        if (userRole === 'student') window.location.href = 'index.html';
-        if (userRole === 'admin') window.location.href = 'admin_dashboard.html';
+        // We are on login or role page, redirect if already logged in
+        if (userRole) {
+            if (userRole === 'student') window.location.href = 'index.html';
+            if (userRole === 'admin') window.location.href = 'admin_dashboard.html';
+        }
     }
 
     // Handle Login Submit
@@ -54,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('userRole');
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userName');
-            window.location.href = 'login.html';
+            window.location.href = 'role_selection.html';
         });
     });
 });

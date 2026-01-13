@@ -54,6 +54,23 @@
     </div>
 
     <script src="js/auth.js"></script>
+    <script>
+        // Check for role param in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        const roleSelect = document.getElementById('role');
+
+        if (roleParam && roleSelect) {
+            // Set the role
+            roleSelect.value = roleParam;
+
+            // Optionally disable/hide it to lock choice
+            // roleSelect.disabled = true; 
+
+            // Or nice UI touch: Update title
+            // document.querySelector('h2').innerText = roleParam.charAt(0).toUpperCase() + roleParam.slice(1) + ' Login';
+        }
+    </script>
 </body>
 
 </html>
