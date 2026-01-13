@@ -471,3 +471,102 @@ ul {
         display: none;
     }
 }
+
+/* Responsive Grid for Admin Page */
+.admin-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 900px) {
+    .admin-grid-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Fix for Analysis Grid in Result Page */
+@media (max-width: 600px) {
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .score-circle {
+        width: 120px;
+        height: 120px;
+    }
+
+    .score-circle::before {
+        width: 90px;
+        height: 90px;
+    }
+
+    .score-val {
+        font-size: 2rem;
+    }
+}
+
+/* Fix Test Page Mobile View */
+@media (max-width: 900px) {
+    .question-palette {
+        display: block !important;
+        /* Override inline or local style hiding it */
+        margin-top: 1.5rem;
+    }
+
+    .test-layout {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+    }
+
+    .question-area {
+        height: auto;
+        min-height: 50vh;
+    }
+}
+
+/* Responsive History Grid for Profile */
+.history-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.profile-card {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .history-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        text-align: left;
+    }
+
+    .history-grid div:nth-child(1) {
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .profile-card button {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+}
