@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Completion</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Great+Vibes&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .certificate-container {
+            width: 800px;
+            height: 600px;
+            background: #fff;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border: 20px solid #2563eb;
+            /* Primary Blue from theme */
+            text-align: center;
+            color: #1f2937;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            color: #1e3a8a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: #4b5563;
+        }
+
+        .presented-to {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .student-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            color: #2563eb;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .course-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1.5rem 0;
+            border-bottom: 1px solid #cbd5e1;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            min-width: 300px;
+        }
+
+        .passing-date {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .signatures {
+            margin-top: 4rem;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .sig-line {
+            border-top: 2px solid #94a3b8;
+            width: 200px;
+            padding-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .certificate-container {
+                box-shadow: none;
+                border-width: 10px;
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="certificate-container">
+        <!-- SVG Watermark Placeholder -->
+        <svg class="watermark" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" />
+        </svg>
+
+        <h1>Certificate</h1>
+        <div class="subtitle">OF ACHIEVEMENT</div>
+
+        <div class="presented-to">This certificate is proudly presented to</div>
+
+        <div class="student-name" id="cert-name">Student Name</div>
+
+        <p>For successfully passing the</p>
+
+        <div class="course-name" id="cert-course">Advanced Calculus</div>
+
+        <div class="passing-date" id="cert-date">Date: January 13, 2026</div>
+
+        <div class="signatures">
+            <div>
+                <div class="sig-line">Director</div>
+            </div>
+            <div>
+                <div class="sig-line">Instructor</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userName = localStorage.getItem('userName') || "Student Name";
+            // For now, hardcode course, or get from Result if we stored it
+            // We can check if there's a result and use today's date
+
+            document.getElementById('cert-name').textContent = userName;
+
+            const date = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('cert-date').textContent = `Awarded on ${date}`;
+
+            window.print();
+        });
+    </script>
+</body>
+
+</html>
