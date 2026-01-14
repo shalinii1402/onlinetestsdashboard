@@ -3,38 +3,65 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
 
-    // Check if we are on a protected page
+    // Page Categories
+    const studentPages = ['student_dashboard.html', 'test.html', 'result.html', 'profile.html'];
+    const adminPages = ['admin_dashboard.html', 'admin_questions.html', 'admin_students.html'];
+    const publicPages = ['index.html', 'login.html', '']; // '' for root
+
+    // Current State
     const path = window.location.pathname;
-    const isLoginPage = path.includes('login.html');
-    // Root path (index.html) is now the Role Selection page
-    const isRolePage = path.endsWith('/') || path.includes('index.html');
+    const pageName = path.split('/').pop() || 'index.html';
     const userRole = localStorage.getItem('userRole');
 
-    if (!isLoginPage && !isRolePage) {
-        if (!userRole) {
-            // Not logged in, redirect to home (role selection)
+    console.log(`Current Page: ${pageName}, User Role: ${userRole}`);
+
+    // 1. Unauthenticated User Protection
+    if (!userRole) {
+        // If on a protected page, redirect to login/home
+        if (studentPages.includes(pageName) || adminPages.includes(pageName)) {
+            console.warn('Unauthorized access. Redirecting to home.');
             window.location.href = 'index.html';
-        } else {
-            // Logged in, check role permission
-            if (path.includes('admin') && userRole !== 'admin') {
-                alert('Access Denied: Admins only.');
-                window.location.href = 'student_dashboard.html';
-            }
+            return;
         }
-    } else if (isRolePage) {
-        // We are on Role/Home page.
-        // Optional: If already logged in, you might want to redirect to dashboard.
-        // But for "Select Role" experience, we might let them choose again OR redirect.
-        // Let's redirect recognized users for convenience:
-        if (userRole === 'student') window.location.href = 'student_dashboard.html';
-        if (userRole === 'admin') window.location.href = 'admin_dashboard.html';
-    } else {
-        // We are on Login page
-        if (userRole === 'student') window.location.href = 'student_dashboard.html';
-        if (userRole === 'admin') window.location.href = 'admin_dashboard.html';
     }
 
-    // Handle Login Submit
+    // 2. Authenticated User Redirection (Access Control & Convenience)
+    if (userRole) {
+        // If on public pages (Login/Home), redirect to dashboard
+        if (publicPages.includes(pageName) || pageName === 'index.html' || path.endsWith('/')) {
+            if (userRole === 'student') {
+                window.location.href = 'student_dashboard.html';
+                return;
+            } else if (userRole === 'admin') {
+                window.location.href = 'admin_dashboard.html';
+                return;
+            }
+        }
+
+        // Role-Based Access Control
+        if (userRole === 'student' && adminPages.includes(pageName)) {
+            alert('Access Denied: You are not an admin.');
+            window.location.href = 'student_dashboard.html';
+            return;
+        }
+
+        if (userRole === 'admin' && studentPages.includes(pageName)) {
+            // Optional: Admins usually shouldn't take tests, but we can redirect or warn.
+            // For strict separation:
+            // alert('Redirecting to Admin Dashboard.');
+            // window.location.href = 'admin_dashboard.html';
+            // return;
+            // Let's decide to redirect for 'test.html' or 'student_dashboard.html' specifically if we want strictness.
+            // For now, let's redirect main student items to admin dash to prevent confusion.
+            if (pageName === 'student_dashboard.html') {
+                window.location.href = 'admin_dashboard.html';
+                return;
+            }
+        }
+    }
+
+
+    // 3. Handle Login Submit
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -42,11 +69,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const role = document.getElementById('role').value;
             const email = document.getElementById('email').value;
 
+            // Simple Validation
+            if (!role || !email) {
+                alert('Please fill in all fields');
+                return;
+            }
+
             // Simulating basic auth
             localStorage.setItem('userRole', role);
             localStorage.setItem('userEmail', email);
             localStorage.setItem('userName', email.split('@')[0]); // Mock name from email
 
+            // Redirect based on role
             if (role === 'admin') {
                 window.location.href = 'admin_dashboard.html';
             } else {
@@ -55,14 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Logout Handler (attach to any logout button found)
+    // 4. Logout Handler
     const logoutBtns = document.querySelectorAll('a[href*="logout"], .logout-btn');
     logoutBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
+            // Clear all auth data
             localStorage.removeItem('userRole');
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userName');
+
+            // Redirect to home
             window.location.href = 'index.html';
         });
     });
